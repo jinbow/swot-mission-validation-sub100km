@@ -156,9 +156,9 @@ These files contain the steric height and other information for each glider and 
 | --- | --- | --- |
 | `lat` | float64 | Latitude values |
 | `lon` | float64 | Longitude values |
-| `time_min` | int64 | Minimum time values |
-| `time_max` | int64 | Maximum time values |
-| `surface_time` | int64 | Surface time values |
+| `time_min` | int64 | Minimum time values, seconds since 2023-01-01 |
+| `time_max` | int64 | Maximum time values, seconds since 2023-01-01 |
+| `surface_time` | int64 | Surface time values, seconds since 2023-01-01 |
 | `depth_min` | float64 | Minimum depth values |
 | `depth_max` | float64 | Maximum depth values |
 | `num_points` | int64 | Number of points in each profile |
