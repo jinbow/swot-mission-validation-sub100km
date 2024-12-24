@@ -5,7 +5,18 @@ In Wang et al. (2025), we conducted a validation analysis of sea surface height 
 
 For validation, we used ground truth data derived from conventional in-situ mooring platforms and confirmed that KaRIn exceeded the mission's science requirements by at least a factor of four.
 
-This code is designed to reproduce all the analyses and figures presented in the paper using published campaign data hosted by PO.DAAC. The analysis is divided into five main steps as outlined below.
+This code is designed to reproduce all the analyses and figures presented in the paper using published campaign data hosted by PO.DAAC. The analysis is divided into five main steps carried out by five main scripts:
+
+- **0.plot_figure1.py**
+- **1.0.density_all_moorings_gliders_level-2.py**
+- **2.0.calculate_steric_height.py**
+- **3.0.colocate.steric.karin.py**
+- **4.0.process.colocated.data.py**
+- **5.0.wavenumber_spectrum.py**
+
+.. contents::
+    :local:
+    :depth: 1
 
 ## 0.plot_figure1.py
 Create Figure 1. Campaign and mooring locations on a background of SSHA from NeurOST and SWOT KaRIn. 
