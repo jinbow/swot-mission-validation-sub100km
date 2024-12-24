@@ -129,14 +129,6 @@ The main script sets up various parameters for calculating the steric height, pr
 * `top_boundary_tolerance=10`: maximum depth gap on the edge of profiles at the top
 * `surface_depth=-8`: the depth of the surface layer, in which density will be replaced by the median of the layer
 
-### Output
-
-The script saves the results to CSV files following the format:
-
-* `../data/rutgers/ru32_ru38_steric_heights_depth_{-integration_depth[0]:3d}.csv`
-* `../data/mooring.data/all_mooring_steric_heights_depth_{-integration_depth[0]:3d}.csv`
-
-These files contain the steric height and other information for each glider and mooring. 
 
 The paper used the following parameters:
 
@@ -147,6 +139,43 @@ bottom_boundary_tolerance=80
 top_boundary_tolerance=10
 surface_depth=-8
 ```
+
+### Output
+
+The script saves the results to CSV files following the format:
+
+* `../data/rutgers/ru32_ru38_steric_heights_depth_{-integration_depth[0]:3d}.csv`
+* `../data/mooring.data/all_mooring_steric_heights_depth_{-integration_depth[0]:3d}.csv`
+
+These files contain the steric height and other information for each glider and mooring. The following shows a snippet of the csv data file. 
+
+**Pandas DataFrame**
+=====================
+
+| **Column Name** | **Data Type** | **Description** |
+| --- | --- | --- |
+| `lat` | float64 | Latitude values |
+| `lon` | float64 | Longitude values |
+| `time_min` | int64 | Minimum time values |
+| `time_max` | int64 | Maximum time values |
+| `surface_time` | int64 | Surface time values |
+| `depth_min` | float64 | Minimum depth values |
+| `depth_max` | float64 | Maximum depth values |
+| `num_points` | int64 | Number of points in each profile |
+| `steric` | float64 | Steric height values (in meters) |
+| `Mooring_ID` | object | Mooring ID values |
+
+**Sample Data**
+---------------
+
+| lat  | lon   | time_min | time_max | surface_time | depth_min | depth_max | num_points | steric | Mooring_ID |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 36.1798 | -125.1268 | 5354727.0000 | 5355523.5000 | 5355434.0000 | -494.8176 | -4.2868 | 1593.0000 | 52.9755 | S1 |
+| 36.1813 | -125.1264 | 5356514.5000 | 5357263.5000 | 5357178.0000 | -496.2219 | -4.7206 | 1494.0000 | 52.1012 | S1 |
+| 36.1825 | -125.1261 | 5358204.5000 | 5358941.0000 | 5358857.0000 | -495.5951 | -4.6571 | 1472.0000 | 52.1746 | S1 |
+| ...   | ...   | ...       | ...      | ...        | ...     | ...    | ...     | ...    | S1 |
+| 36.1841 | -125.1265 | 5363242.0000 | 5363984.0000 | 5363897.0000 | -496.2865 | -4.4438 | 1486.0000 | 50.5210 | S1 |
+
 
 ## 3.0.colocate.steric.karin.py
 Co-locate KaRIn and steric height in spatial and temporal domains
