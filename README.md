@@ -8,7 +8,7 @@ For validation, we used ground truth data derived from conventional in-situ moor
 This code is designed to reproduce all the analyses and figures presented in the paper using published campaign data hosted by PO.DAAC. The analysis is divided into five main steps carried out by five main scripts:
 
 - [0.plot_figure1.py](#plot-figure-1)
-- [1.0.density_all_moorings_gliders_level-2.py](#calculate-density-anomaly)
+- [1.0.density_all_moorings_gliders_level-2.py](#calculate-density-anomaly) Calculate density anomaly. 
 - [2.0.calculate_steric_height.py](#20calculatestericheightpy)
 - [3.0.colocate.steric.karin.py](#30colocaterickarinpy)
 - [4.0.process.colocated.data.py](#40processcolocateddatapy)
