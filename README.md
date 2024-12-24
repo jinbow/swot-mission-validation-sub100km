@@ -10,8 +10,8 @@ This code is designed to reproduce all the analyses and figures presented in the
 ## 0.plot_figure1.py
 Create Figure 1. Campaign and mooring locations on a background of SSHA from NeurOST and SWOT KaRIn. 
 
-Input Data Files
-----------------
+### Input Data Files
+
 
 Place the following data files in the `data/` directory:
 
@@ -23,15 +23,15 @@ Place the following data files in the `data/` directory:
 
 These data can be downloaded from the paper page on AGU website. 
 
-Usage
------
+### Usage
+
 
 1. Ensure the input data files are in the `data/` directory.
 2. Run the script to process the data and generate visualizations:
 
-.. code-block:: bash
-
+```bash
    python 0.plot_figure1.py
+```
 
 3. The output figures are saved in the `figures/` directory:
    - `figure1_locations.png`: Regional map with SSHA data and mooring positions.
@@ -39,11 +39,9 @@ Usage
 
 4. Use photo editor such as Gimp to create the Figure 1 in Wang et al. (2025)
 
-Directory Structure
--------------------
+### Directory Structure
 
-.. code-block:: text
-
+```markdown
    .
    ├── data/
    │   ├── NeurOST_SSH-SST_20230403_20240722.nc
@@ -55,6 +53,7 @@ Directory Structure
    │   └── figure1_locations_zoom.png
    ├── utils.py
    └── main_script.py
+```
 
 ## 1.0.density_all_moorings_gliders_level-2.py
 Restructure all mooring profiles and calculate density anomaly
