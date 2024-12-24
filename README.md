@@ -14,9 +14,6 @@ This code is designed to reproduce all the analyses and figures presented in the
 - **4.0.process.colocated.data.py**
 - **5.0.wavenumber_spectrum.py**
 
-.. contents::
-    :local:
-    :depth: 1
 
 ## 0.plot_figure1.py
 Create Figure 1. Campaign and mooring locations on a background of SSHA from NeurOST and SWOT KaRIn. 
