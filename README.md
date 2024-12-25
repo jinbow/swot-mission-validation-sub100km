@@ -158,8 +158,8 @@ The script saves the results to CSV files following the format:
 
 These files contain the steric height and other information for each glider and mooring. The following shows a snippet of the csv data file. 
 
-**Pandas DataFrame**
-=====================
+#### **Pandas DataFrame**
+
 
 | **Column Name** | **Data Type** | **Description** |
 | --- | --- | --- |
@@ -174,8 +174,8 @@ These files contain the steric height and other information for each glider and 
 | `steric` | float64 | Steric height values (in meters) |
 | `Mooring_ID` | object | Mooring ID values |
 
-**Sample Data**
----------------
+#### **Sample Data**
+
 
 | lat  | lon   | time_min | time_max | surface_time | depth_min | depth_max | num_points | steric | Mooring_ID |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
