@@ -278,13 +278,13 @@ This script includes a series of functions for processing, selecting, and analyz
 ### Example use:
 
 ```bash
-    python 4.0.process.colocated.data.py 0 -500 100 9
+    python 4.0.process.colocated.data.py -500 0 100 9
 ```
 
-```bash
+```markdown
     Parameters:
-    0      : Integration depth at the top of the water column (in meters).
     -500   : Integration depth at the bottom of the water column (in meters).
+    0      : Integration depth at the top of the water column (in meters).
     100    : Maximum allowable time difference between steric (mooring profile) and SWOT flyover time (in minutes).
     9      : Minimum number of valid points required to remove trends. Default is 5; 
              any snapshot with fewer than 5 points will be dropped.
