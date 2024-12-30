@@ -134,7 +134,7 @@ bottom_boundary_tolerance=80
 ```
 All other parameters use default values. 
 
-### Functions Used
+### Functions
 
 * `despike_profile(x, y, sigma=5)`: removes spikes from a profile
 * `remove_spikes(df, sigma=5, varname='steric')`: removes spikes from a time series in a pandas DataFrame
@@ -152,6 +152,10 @@ The script saves the results to CSV files following the format:
 
 * `../data/rutgers/ru32_ru38_steric_heights_depth_{-bottom_depth:3d}.csv`
 * `../data/mooring.data/all_mooring_steric_heights_depth_{-bottom_depth:3d}.csv`
+
+Given bottom_depth=-500, the two output files are 
+* `../data/rutgers/ru32_ru38_steric_heights_depth_500.csv`
+* `../data/mooring.data/all_mooring_steric_heights_depth_500.csv`
 
 These files contain the steric height and auxillary information for each profiles. The following shows a snippet of the csv data file. 
 
@@ -171,7 +175,7 @@ These files contain the steric height and auxillary information for each profile
 | `lon` | float64 | Longitude values |
 | `time_min` | int64 | Minimum time values, seconds since 2023-01-01 |
 | `time_max` | int64 | Maximum time values, seconds since 2023-01-01 |
-| `surface_time` | int64 | Surface time values, seconds since 2023-01-01 |
+| `surface_time` | int64 | Surface time values averaged between surface and a depth set by the parameter surface_time_depth (default -100 m), seconds since 2023-01-01 |
 | `depth_min` | float64 | Minimum depth values |
 | `depth_max` | float64 | Maximum depth values |
 | `num_points` | int64 | Number of points in each profile |
