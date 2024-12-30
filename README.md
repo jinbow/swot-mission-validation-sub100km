@@ -241,9 +241,9 @@ Example:
 
 - **SWOT Karin Data**:
   - Processed for two specific passes (`013` and `026`) within a latitude range.
-  - The data are located in ../data/
-  - '../data/SWOT_L2_LR_SSH_2.0_combined_calval_orbit_pass_013_sub_lat-30-40.nc'
-  - '../data/SWOT_L2_LR_SSH_2.0_combined_calval_orbit_pass_026_sub_lat-30-40.nc'
+  - The data are located in `../data/`
+  - `../data/SWOT_L2_LR_SSH_2.0_combined_calval_orbit_pass_013_sub_lat-30-40.nc`
+  - `../data/SWOT_L2_LR_SSH_2.0_combined_calval_orbit_pass_026_sub_lat-30-40.nc`
 
 - **Data Cleaning**:
   - Filters the co-located data to remove missing or invalid entries.
@@ -253,11 +253,9 @@ Example:
 
 Example Usage
 -------------
-
-.. code-block:: bash
-
+```bash
    python 3.0.colocate.steric.karin.py 0 -500
-
+```
 Output
 ------
 
