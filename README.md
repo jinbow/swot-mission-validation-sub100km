@@ -254,7 +254,7 @@ Example:
 Example Usage
 -------------
 ```bash
-   python 3.0.colocate.steric.karin.py 0 -500
+   python 3.0.colocate.steric.karin.py -500 0
 ```
 Output
 ------
