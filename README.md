@@ -44,7 +44,7 @@ Place the following data files in the `data/` directory:
 
 These data can be downloaded from the paper page on AGU website. 
 
-## 1. Plot Figure 1
+## Plot Figure 1
 Create Figure 1. Campaign and mooring locations on a background of SSHA from NeurOST and SWOT KaRIn. 
 
 ### Usage
@@ -62,7 +62,7 @@ Create Figure 1. Campaign and mooring locations on a background of SSHA from Neu
 
 4. Use photo editor such as Gimp to create the Figure 1 in Wang et al. (2025)
 
-## Calculate density anomaly
+## 1. Calculate density anomaly
 1.0.density_all_moorings_gliders_level-2.py
 This script calculates the density from moorings and gliders, combines them into one file, removes outliers, and saves the resulting data.
 
