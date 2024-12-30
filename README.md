@@ -175,7 +175,7 @@ These files contain the steric height and auxillary information for each profile
 | `lon` | float64 | Longitude values |
 | `time_min` | int64 | Minimum time values, seconds since 2023-01-01 |
 | `time_max` | int64 | Maximum time values, seconds since 2023-01-01 |
-| `surface_time` | int64 | Surface time values averaged between surface and a depth set by the parameter surface_time_depth (default -100 m), seconds since 2023-01-01 |
+| `surface_time` | int64 | Surface time values averaged between surface and a depth set by the parameter surface_time_depth (default -100 m). I used the upper 100 m average time to represent the time of the profile to account for surface-intensified small-scale signal. This time stamp will be used to match SWOT flyover time.  seconds since 2023-01-01 |
 | `depth_min` | float64 | Minimum depth values |
 | `depth_max` | float64 | Maximum depth values |
 | `num_points` | int64 | Number of points in each profile |
@@ -187,38 +187,47 @@ These files contain the steric height and auxillary information for each profile
 ## 3. Colocate Steric and KaRIn
 - **3.0.colocate.steric.karin.py**
 
-This Python script performs the co-location of steric height data from moorings and gliders with SWOT Karin data. 
-It includes data cleaning, subsetting, interpolation, and saving the output 
-in a structured format.
+This script aligns steric height points (spatially sparse, temporally dense) with SWOT Karin data (spatially dense, temporally sparse). It performs data cleaning, subsetting, interpolation, and saves the output in a structured format.
 
-### The script does the follwing
+```bash
+python 3.0.colocate.steric.karin.py --bottom_depth=-500 --top_depth=0
+```
+### The script does the following
 1. **Cleans and pre-processes steric data**: Removes missing values and sorts by time.
 2. **Loads SWOT Karin data**: Reads data within specified latitude and time ranges, and applies masks to remove bad data.
 3. **Interpolates steric data**: Aligns steric height data with SWOT Karin data spatially and temporally.
 4. **Handles multiple passes**: Supports processing for specific SWOT orbit passes.
 5. **Exports results**: Saves the co-located data to a CSV file using Pandas.
 
+The input data are produced by the second step [2.0.calculate_steric_height.py](#calculate-steric-height).
+
+- **SWOT Karin Data**:
+  - Processed for two specific passes (`013` and `026`) within a latitude range.
+  - The data are located in `../data/`
+  - `../data/SWOT_L2_LR_SSH_2.0_combined_calval_orbit_pass_013_sub_lat-30-40.nc`
+  - `../data/SWOT_L2_LR_SSH_2.0_combined_calval_orbit_pass_026_sub_lat-30-40.nc`
+
 ### Key Functions
 
-**mask_bad_karin(kk)**
+* **mask_bad_karin(kk)**
 
 - Removes bad SWOT Karin data based on RMS (Root Mean Square) values.
 - Plots the RMS values and displays the data for visual inspection.
 
-**colocate(karin_fn, steric)**
+* **colocate(karin_fn, steric)**
 
-- **Inputs**:
-  - `karin_fn`: Path to the SWOT Karin data file.
-  - `steric`: Steric height dataset from moorings and gliders. These data are produced by [2.0.calculate_steric_height.py](#calculate-steric-height).
+    - **Inputs**:
+     - `karin_fn`: Path to the SWOT Karin data file.
+     - `steric`: Steric height dataset from moorings and gliders. These data are produced by [2.0.calculate_steric_height.py](#calculate-steric-height).
 
-- **Process**:
-  1. Filters steric data to remove missing values. 
-  2. Loads SWOT data and subsets it by latitude and time.
-  3. Interpolates steric height data to SWOT Karin data's spatial and temporal resolution.
-  4. Handles individual mooring IDs and interpolates data for each.
+    - **Process**:
+        1. Filters steric data to remove missing values. 
+        2. Loads SWOT data and subsets it by latitude and time.
+        3. Interpolates steric height data to SWOT Karin data's spatial and temporal resolution.
+        4. Handles individual mooring IDs and interpolates data for each.
 
-- **Output**:
-  - A concatenated DataFrame of co-located data for all moorings and gliders.
+    - **Output**:
+    - A concatenated DataFrame of co-located data for all moorings and gliders.
 
 Example:
 
@@ -230,44 +239,18 @@ Example:
 | ...      | ...      | ...        | ...        | ...          | ...       | ...       | ...        | ...     | ...        |
 | 36.1841  | -125.1265| 5363242.0000| 5363984.0000| 5363897.0000 | -496.2865 | -4.4438   | 1486.0000  | 50.5210 | S1         |
 
+| **Field**                | **Description**                                                                                                           |
+|--------------------------|---------------------------------------------------------------------------------------------------------------------------|
+| `time_karin`             | Timestamp of SWOT data.                                                                                                  |
+| `lon`, `lat`             | Longitude and latitude of the co-located data point (from moorings).                                                     |
+| `time_delta_left`        | Time separation between SWOT pass and available steric data before the SWOT pass time.                                   |
+| `time_delta_right`       | Time separation between SWOT pass and available steric data after the SWOT pass time.                                    |
+| `ssha_karin`             | Co-located SWOT sea surface height anomaly.                                                                              |
+| `steric`, `steric_linear`| Steric height from moorings or gliders (nearest and linear interpolations), with quality control using `time_delta` values to exclude separations over 100 minutes on either side.                                                                  |
+| `swh`                    | Significant wave height.                                                                                                 |
+| `pass_num`               | SWOT orbit pass number.                                                                                                  |
+| `mooring_id`             | Mooring or glider identifier (`S1`, `P1`, `P2`, `S2`, `P3`, `P4`, `S3`, `P5`, `P6`, `S4`, `P7`, `ru32`, `ru38`).         |
 
-### Main Script 
-
-- **Integration Depth**: Defined as command-line arguments specifying the depth range for steric height integration. The paper used 0 -500, meaning the integration depth for the steric height calculation is surface to 500 meters.
-
-- **Mooring and Glider Data**:
-  - Read from CSV files (`fn_mooring`, `fn_glider`) generated by the second step [2.0.calculate_steric_height.py](#calculate-steric-height).
-
-- **SWOT Karin Data**:
-  - Processed for two specific passes (`013` and `026`) within a latitude range.
-  - The data are located in `../data/`
-  - `../data/SWOT_L2_LR_SSH_2.0_combined_calval_orbit_pass_013_sub_lat-30-40.nc`
-  - `../data/SWOT_L2_LR_SSH_2.0_combined_calval_orbit_pass_026_sub_lat-30-40.nc`
-
-- **Data Cleaning**:
-  - Filters the co-located data to remove missing or invalid entries.
-
-- **Output**:
-  - Saves the cleaned, co-located data to a CSV file with specified formatting.
-
-Example Usage
--------------
-```bash
-   python 3.0.colocate.steric.karin.py -500 0
-```
-Output
-------
-
-The final co-located data is saved in a CSV file, with the following columns:
-
-- `time_karin`: Timestamp of SWOT data.
-- `lon`, `lat`: Longitude and latitude of the co-located data point (from moorings).
-- `time_delta_left`, `time_delta_right`: Time separation between SWOT pass and available steric data before (time_delta_left) and after (time_delta_right) the SWOT pass time.
-- `ssha_karin`: colocated SWOT sea surface height anomaly.
-- `steric`, `steric_linear`: Steric height from moorings or gliders (nearest and linear interpolations), with quality control using time_delta values to exclude separations over 100 minutes on either side.
-- `swh`: Significant wave height.
-- `pass_num`: SWOT orbit pass number.
-- `mooring_id`: Mooring or glider identifier ['S1','P1','P2','S2','P3','P4','S3','P5','P6','S4','P7','ru32','ru38'].
 
 [Return to Top](#swot-mission-validation-sub100km)
 
