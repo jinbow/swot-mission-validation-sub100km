@@ -61,6 +61,7 @@ Create Figure 1. Campaign and mooring locations on a background of SSHA from Neu
    - `figure1_locations_zoom.png`: Zoomed-in map for details of the mooring positions.
 
 4. Use photo editor such as Gimp to create the Figure 1 in Wang et al. (2025)
+[Return to Top](#swot-mission-validation-sub100km)
 
 ## 1. Calculate density anomaly
 1.0.density_all_moorings_gliders_level-2.py
@@ -97,19 +98,10 @@ This script calculates the density from moorings and gliders, combines them into
 	+ Gliders (with outlier removal)
 * Optional: the original mooring and glider datasets are saved separately.
 
-## Calculate Steric Height 
-- **2.0.calculate_steric_height.py**
+## 2. Calculate Steric Height 
+- Script: **2.0.calculate_steric_height.py**
 
 This script calculates the steric height from the density anomaly profiles from moorings and gliders. It uses various functions to process the data, remove spikes, and calculate the steric height.
-
-### Modules Used
-
-* `xarray` for handling netCDF files
-* `numpy` for numerical computations
-* `pandas` for data manipulation and analysis
-* `matplotlib.pyplot` for plotting (not used in this script)
-* `gsw` for calculating density from pressure
-* `tqdm` for displaying progress bars
 
 ### Functions Used
 
@@ -183,8 +175,9 @@ These files contain the steric height and other information for each glider and 
 | ...   | ...   | ...       | ...      | ...        | ...     | ...    | ...     | ...    | S1 |
 | 36.1841 | -125.1265 | 5363242.0000 | 5363984.0000 | 5363897.0000 | -496.2865 | -4.4438 | 1486.0000 | 50.5210 | S1 |
 
+[Return to Top](#swot-mission-validation-sub100km)
 
-## Colocate Steric and KaRIn
+## 3. Colocate Steric and KaRIn
 - **3.0.colocate.steric.karin.py**
 
 This Python script performs the co-location of steric height data from moorings and gliders with SWOT Karin data. 
@@ -231,8 +224,6 @@ Example:
 | 36.1841  | -125.1265| 5363242.0000| 5363984.0000| 5363897.0000 | -496.2865 | -4.4438   | 1486.0000  | 50.5210 | S1         |
 
 
-
-
 ### Main Script 
 
 - **Integration Depth**: Defined as command-line arguments specifying the depth range for steric height integration. The paper used 0 -500, meaning the integration depth for the steric height calculation is surface to 500 meters.
@@ -271,8 +262,9 @@ The final co-located data is saved in a CSV file, with the following columns:
 - `pass_num`: SWOT orbit pass number.
 - `mooring_id`: Mooring or glider identifier ['S1','P1','P2','S2','P3','P4','S3','P5','P6','S4','P7','ru32','ru38'].
 
+[Return to Top](#swot-mission-validation-sub100km)
 
-## 4 Statistics
+## 4. Statistics
 - **4.0.process.colocated.data.py**
 This script includes a series of functions for processing, selecting, and analyzing colocated data between steric and KaRIn. The analysis involves removing linear trends in space and time, selecting valid data based on time and spatial criteria, and visualizing various aspects of the colocated data. Below is a description of each function and its purpose.
 
@@ -305,7 +297,7 @@ This script includes a series of functions for processing, selecting, and analyz
    Returns:
    - The data with trends removed.
 
-2. **select_along_karin_swath_center(df, dis=0.025)**
+1. **select_along_karin_swath_center(df, dis=0.025)**
    
    Selects data points along the center of the SWOT satellite swath. The distance between the data points and the swath center is evaluated, and only those points within a given distance are selected. It is useful to select the gliders near the swath centers. It does not affect mooring data selection. 
    
@@ -395,9 +387,12 @@ This script includes a series of functions for processing, selecting, and analyz
 
    Loops over various parameter combinations (e.g., depth, valid points, and time difference thresholds) to compute the colocated data statistics and save the results.
 
+[Return to Top](#swot-mission-validation-sub100km)
+
+## 5. Wavenumber Spectrum 
+- Script: **5.0.wavenumber_spectrum.py**
+
+Compute the final wavenumber spectrum of the steric height, SWOT KaRIn SSHA, and their difference. 
 
 
-## Wavenumber Spectrum 
-- **5.0.wavenumber_spectrum.py**
-
-Wavenumber spectrum analysis 
+[Return to Top](#swot-mission-validation-sub100km)
