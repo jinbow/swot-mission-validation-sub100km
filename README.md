@@ -24,6 +24,8 @@ This code is designed to reproduce all the analyses and figures presented in the
    │   ├── SWOT_L2_LR_SSH_2.0_combined_calval_orbit_pass_013_sub_lat-30-40.nc
    │   ├── SWOT_L2_LR_SSH_2.0_combined_calval_orbit_pass_026_sub_lat-30-40.nc
    │   └── mooring_positions.csv
+   |   ├── mooring.data/
+   |   ├── density_all_moorings_level-2.nc
    ├── figures/
    │   ├── figure1_locations.png
    │   └── figure1_locations_zoom.png
@@ -44,6 +46,14 @@ Place the following data files in the `data/` directory:
 
 These data can be downloaded from the paper page on AGU website. 
 
+## Rerun all scripts
+```bash
+    python 0.plot_figure1.py
+    python 2.0.calculate_steric_height.py --bottom_depth=-500 --top_depth=0 --bottom_boundary_tolerance=80
+    python 3.0.colocate.steric.karin.py --bottom_depth=-500 --top_depth=0
+    python 4.0.process.colocated.data.py --bottom_depth=-500 --top_depth=0 --deltat_threshold=100 --valid_points=9
+    python 5.0.wavenumber_spectrum.py --bottom_depth=-500 --valid_points=9
+```
 ## Plot Figure 1
 Create Figure 1. Campaign and mooring locations on a background of SSHA from NeurOST and SWOT KaRIn. 
 
@@ -64,16 +74,16 @@ Create Figure 1. Campaign and mooring locations on a background of SSHA from Neu
 [Return to Top](#swot-mission-validation-sub100km)
 
 ## 1. Calculate density anomaly
-1.0.density_all_moorings_gliders_level-2.py
+- Script: **1.0.density_all_moorings_gliders_level-2.py**
+
 This script calculates the density from moorings and gliders, combines them into one file, removes outliers, and saves the resulting data.
 
-### Input
+Unless you want to recaculate from the source data on PO.DAAC, this script can be skipped. The data produced by this script is the fundation of all following analysis and can be downloaded from AGU website. Details can be found in the Supplemental Materials. 
 
-* `path_input`: a directory path containing input files (e.g., netCDF files). The relative path should be `../data/`.
-* `fn`: the output file name for the combined dataset
-* Optional parameters:
-	+ `do_moorings`: boolean flag to indicate whether to process mooring data (default: True)
-	+ `do_remove_outliers`: boolean flag to indicate whether to remove outliers from the data (default: False)
+- **Input**
+ * Level-2 mooring data. 
+- **Output**
+ * A single netCDF file containing all processed data `../data/mooring.data/density_all_moorings_level-2_removed_outliers.nc`. This is the input file for [step 2](#2-calculate-steric-height). 
 
 ### Process
 
@@ -91,17 +101,38 @@ This script calculates the density from moorings and gliders, combines them into
 5. **Saving Output**
 	* Save the combined dataset to disk as a new netCDF file (`fn_out`)
 
-### Output
-
-* A single netCDF file containing all processed data, including:
-	+ Moorings
-	+ Gliders (with outlier removal)
-* Optional: the original mooring and glider datasets are saved separately.
-
 ## 2. Calculate Steric Height 
 - Script: **2.0.calculate_steric_height.py**
 
-This script calculates the steric height from the density anomaly profiles from moorings and gliders. It uses various functions to process the data, remove spikes, and calculate the steric height.
+This script calculates the steric height from the mooring and glider density anomaly profiles. It uses various functions to process the data, remove spikes, and calculate the steric height.
+
+Example usege:
+
+```bash
+python 2.0.calculate_steric_height.py --bottom_depth=-500 --top_depth=0 --bottom_boundary_tolerance=80
+```
+
+### Parameters Used
+
+* `bottom_depth=-500`: bottom depth for steric height calculation
+* `top_depth=0`: top depth for steric height calculation
+* `max_spacing=10`: minimum gap threshold for identifying a good profile
+* `time_span_minimum=10 * 60`: minimum time span for steric height calculation
+* `time_span_maximum=120 * 60`: maximum time span for steric height calculation
+* `rho0=1027.5`: density at sea level
+* `surface_time_depth=-100`: depth range between surface_time_depth and surface used to estimate mean time
+* `bottom_boundary_tolerance=10`: maximum depth gap on the edge of profiles at the bottom. Set to 80 meters because P moorings do not go as deep as 500 m. Extrapolation was used to fill ~420-500m depth range in P moorings. Errors are introduced by this extrapolation but considered tolerable shown by the final results. 
+* `top_boundary_tolerance=10`: maximum depth of the shallowest measurement. 
+* `surface_depth=-8`: the depth of the surface layer, in which density will be replaced by the median of the layer. This mitigates the outliers in the thin upper layers. 
+
+The paper used the following parameters:
+
+```markdown
+bottom_depth=-500
+top_depth=0
+bottom_boundary_tolerance=80
+```
+All other parameters use default values. 
 
 ### Functions Used
 
@@ -115,41 +146,24 @@ This script calculates the steric height from the density anomaly profiles from 
 * `calculate_mooring_steric(time, data, mooring_name, ...)`: calculates the steric height from a mooring profile
 * `remove_spikes(df)` (called by `calculate_mooring_steric`): removes spikes from a time series in a pandas DataFrame
 
-### Main Script
-
-The main script sets up various parameters for calculating the steric height, processes gliders and moorings using these parameters, and saves the results to CSV files.
-
-### Parameters Used
-
-* `integration_depth=[-500, 0]`: depth range for steric height calculation
-* `max_spacing=10`: minimum gap threshold for identifying a good profile
-* `time_span_minimum=10 * 60`: minimum time span for steric height calculation
-* `time_span_maximum=120 * 60`: maximum time span for steric height calculation
-* `rho0=1027.5`: density at sea level
-* `surface_time_depth=-100`: depth range between surface_time_depth and surface used to estimate mean time
-* `bottom_boundary_tolerance=10`: maximum depth gap on the edge of profiles at the bottom
-* `top_boundary_tolerance=10`: maximum depth gap on the edge of profiles at the top
-* `surface_depth=-8`: the depth of the surface layer, in which density will be replaced by the median of the layer
-
-
-The paper used the following parameters:
-
-```markdown
-integration_depth=[-500, 0]
-max_spacing=10
-bottom_boundary_tolerance=80
-top_boundary_tolerance=10
-surface_depth=-8
-```
-
 ### Output
 
 The script saves the results to CSV files following the format:
 
-* `../data/rutgers/ru32_ru38_steric_heights_depth_{-integration_depth[0]:3d}.csv`
-* `../data/mooring.data/all_mooring_steric_heights_depth_{-integration_depth[0]:3d}.csv`
+* `../data/rutgers/ru32_ru38_steric_heights_depth_{-bottom_depth:3d}.csv`
+* `../data/mooring.data/all_mooring_steric_heights_depth_{-bottom_depth:3d}.csv`
 
-These files contain the steric height and other information for each glider and mooring. The following shows a snippet of the csv data file. 
+These files contain the steric height and auxillary information for each profiles. The following shows a snippet of the csv data file. 
+
+#### Sample Data
+
+| lat  | lon   | time_min | time_max | surface_time | depth_min | depth_max | num_points | steric | Mooring_ID |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 36.1798 | -125.1268 | 5354727.0000 | 5355523.5000 | 5355434.0000 | -494.8176 | -4.2868 | 1593.0000 | 52.9755 | S1 |
+| 36.1813 | -125.1264 | 5356514.5000 | 5357263.5000 | 5357178.0000 | -496.2219 | -4.7206 | 1494.0000 | 52.1012 | S1 |
+| 36.1825 | -125.1261 | 5358204.5000 | 5358941.0000 | 5358857.0000 | -495.5951 | -4.6571 | 1472.0000 | 52.1746 | S1 |
+| ...   | ...   | ...       | ...      | ...        | ...     | ...    | ...     | ...    | S1 |
+| 36.1841 | -125.1265 | 5363242.0000 | 5363984.0000 | 5363897.0000 | -496.2865 | -4.4438 | 1486.0000 | 50.5210 | S1 |
 
 | **Column Name** | **Data Type** | **Description** |
 | --- | --- | --- |
@@ -163,17 +177,6 @@ These files contain the steric height and other information for each glider and 
 | `num_points` | int64 | Number of points in each profile |
 | `steric` | float64 | Steric height values (in meters) |
 | `Mooring_ID` | object | Mooring ID values |
-
-#### Sample Data
-
-
-| lat  | lon   | time_min | time_max | surface_time | depth_min | depth_max | num_points | steric | Mooring_ID |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 36.1798 | -125.1268 | 5354727.0000 | 5355523.5000 | 5355434.0000 | -494.8176 | -4.2868 | 1593.0000 | 52.9755 | S1 |
-| 36.1813 | -125.1264 | 5356514.5000 | 5357263.5000 | 5357178.0000 | -496.2219 | -4.7206 | 1494.0000 | 52.1012 | S1 |
-| 36.1825 | -125.1261 | 5358204.5000 | 5358941.0000 | 5358857.0000 | -495.5951 | -4.6571 | 1472.0000 | 52.1746 | S1 |
-| ...   | ...   | ...       | ...      | ...        | ...     | ...    | ...     | ...    | S1 |
-| 36.1841 | -125.1265 | 5363242.0000 | 5363984.0000 | 5363897.0000 | -496.2865 | -4.4438 | 1486.0000 | 50.5210 | S1 |
 
 [Return to Top](#swot-mission-validation-sub100km)
 
