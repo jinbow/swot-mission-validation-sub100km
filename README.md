@@ -281,7 +281,10 @@ This script includes a series of functions for processing, selecting, and analyz
 ### Output
 
 - The output is saved to 
-  `../data/4.0.colocated_data_karin_moorings_gliders_depth_{-args.bottom_depth:3d}.valid_points.{valid_points:02d}.deltat_{deltat_threshold:03d}m.clean.csv`
+
+```markdown
+  ../data/4.0.colocated_data_karin_moorings_gliders_depth_{-args.bottom_depth:3d}.valid_points.{valid_points:02d}.deltat_{deltat_threshold:03d}m.clean.csv
+```
 
 Example:
 
