@@ -444,29 +444,16 @@ Given the parameters used in the paper: bottom_depth=-500, valid_points=9 and de
 
 
 ### Key Functions
+- `spectrum_karin_swath_center` calculate the spectrum of the KaRIN SSHA on the original 2 km posting. 
+- `wavenumber_spectrum` calculates the wavenumber spectrum of a variable using either the `interpolate` or `lombscargle` method. 
+- `plot_spectrum` generates a log-log plot of the wavenumber spectrum for both steric, Karin SSHA, and their differences.
 
-1. **Wavenumber Spectrum Calculation**:
-   - The `wavenumber_spectrum` function calculates the wavenumber spectrum of the steric height and SSHA using either the `interpolate` or `lombscargle` method.
-   - The `spectrum_karin_swath_center` function computes the spectrum for Karin SSHA at a specific swath center, either using the Welch method or Lomb-Scargle.
 
-2. **Data Input**:
-   - The script reads data from the CSV file produced by step 4. The file contains colocated mooring steric height and SWOT KaRIn SSHA.
-   - The input data must have columns such as `time_karin`, `lat`, `lon`, `steric_linear` and `ssha_karin`.
-
-3. **Plotting**:
-   - The `plot_spectrum` function generates a log-log plot of the wavenumber spectrum for both steric, Karin SSHA, and their differences.
-
-4. **Method Options**:
-   - The `Welch` method uses a fast Fourier transform (FFT) to estimate the power spectral density (PSD).
-   - The `Lomb-Scargle` method is used for unevenly spaced data and is applied to calculate the periodogram.
-
-5. **Usage**:
-   - To run the script, you need to provide an integration depth as command-line arguments (e.g., `-500 0` for the bottom and top depths). The script will compute the spectrum for the specified depth range.
-   - The spectrum plot is saved to the specified directory.
-
-Example Command
+Example Usage
 ---------------
 ```bash
-python wavenumber_spectrum.py -500 0
+python 5.0.wavenumber_spectrum.py --bottom_depth=-500 --valid_points=9
+```
+The spectrum plot is saved to the `../figures` directory.
 
 [Return to Top](#swot-mission-validation-sub100km)
