@@ -199,13 +199,18 @@ python 3.0.colocate.steric.karin.py --bottom_depth=-500 --top_depth=0
 4. **Handles multiple passes**: Supports processing for specific SWOT orbit passes.
 5. **Exports results**: Saves the co-located data to a CSV file using Pandas.
 
-The input data are produced by the second step [2.0.calculate_steric_height.py](#calculate-steric-height).
+- **Input data**
+    - Steric height 
+        * Produced by the second step [2.0.calculate_steric_height.py](#calculate-steric-height).
+        * `../data/rutgers/ru32_ru38_steric_heights_depth_{-args.bottom_depth:3d}.csv`
+        * `../data/mooring.data/all_mooring_steric_heights_depth_{-args.bottom_depth:3d}.csv`
+    - SWOT Karin
+        * The data are located in `../data/`
+        * `../data/SWOT_L2_LR_SSH_2.0_combined_calval_orbit_pass_013_sub_lat-30-40.nc`
+        * `../data/SWOT_L2_LR_SSH_2.0_combined_calval_orbit_pass_026_sub_lat-30-40.nc`
 
-- **SWOT Karin Data**:
-  - Processed for two specific passes (`013` and `026`) within a latitude range.
-  - The data are located in `../data/`
-  - `../data/SWOT_L2_LR_SSH_2.0_combined_calval_orbit_pass_013_sub_lat-30-40.nc`
-  - `../data/SWOT_L2_LR_SSH_2.0_combined_calval_orbit_pass_026_sub_lat-30-40.nc`
+The output is saved in `../data/colocated_data_karin_moorings_gliders_depth_{-args.bottom_depth:3d}.csv`
+
 
 ### Key Functions
 
