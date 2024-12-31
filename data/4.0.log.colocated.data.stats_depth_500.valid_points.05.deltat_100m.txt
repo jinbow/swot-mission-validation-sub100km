@@ -1,0 +1,25 @@
+python 4.0.process.colocated.data.py --valid_points=5
+load data from ../data/3.0.colocated_data_karin_moorings_gliders_depth_500.csv
+use varname steric_linear
+number of data points with gliders: 1830 
+number of data points without gliders: 1577 
+number of data points with good steric: 1440 
+     statistics 
+-------------------- 
+                     S1         P1          P2  ...          S4          P7        total
+mad           0.526426   0.317337    0.417748  ...    0.378168    0.601057     0.468465
+std           0.396283   0.256453    0.388609  ...    0.290410    0.428555     0.372735
+rmsd          0.658887   0.407850    0.570533  ...    0.476737    0.738174     0.598657
+num_points  159.000000  89.000000  149.000000  ...  155.000000  145.000000  1430.000000
+
+[4 rows x 12 columns]
+save figure to ../figures/4.0.colocated_data_rmsd_depth_500.valid_points.05.deltat_100m.png
+save figure to ../figures/4.0.colocated_data_swh_rmsd_depth_500.valid_points.05.deltat_100m.png
+save figure to ../figures/4.0.colocated_data_scatter_karin_vs_steric_depth_500.valid_points.05.deltat_100m.png
+save figure to ../figures/4.0.colocated_data_rmsd_cdf_depth_500.valid_points.05.deltat_100m.png
+number of rows in data0: 1430
+number of unique time: 163
+number of days 99.34938657407407)
+save cleaned data to ../data/4.0.colocated_data_karin_moorings_gliders_depth_500.valid_points.05.deltat_100m.clean.csv
+save figure to ../figures/4.0.colocated_data_steric_spatial_profiles_depth_500.valid_points.05.deltat_100m.png
+save figure to ../figures/4.0.colocated_data_time_series_depth_500.valid_points.05.deltat_100m.png
