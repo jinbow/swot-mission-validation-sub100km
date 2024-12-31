@@ -212,7 +212,9 @@ python 3.0.colocate.steric.karin.py --bottom_depth=-500 --top_depth=0
 
 ### The output 
 
- The output is saved in `../data/colocated_data_karin_moorings_gliders_depth_{-args.bottom_depth:3d}.csv`
+ The output is saved in 
+ 
+ `../data/colocated_data_karin_moorings_gliders_depth_{-args.bottom_depth:3d}.csv`
 
 
 Example:
@@ -225,17 +227,6 @@ Example:
 | ...      | ...      | ...        | ...        | ...          | ...       | ...       | ...        | ...     | ...        |
 | 36.1841  | -125.1265| 5363242.0000| 5363984.0000| 5363897.0000 | -496.2865 | -4.4438   | 1486.0000  | 50.5210 | S1         |
 
-| **Field**                | **Description**                                                                                                           |
-|--------------------------|---------------------------------------------------------------------------------------------------------------------------|
-| `time_karin`             | Timestamp of SWOT data.                                                                                                  |
-| `lon`, `lat`             | Longitude and latitude of the co-located data point (from moorings).                                                     |
-| `time_delta_left`        | Time separation between SWOT pass and available steric data before the SWOT pass time.                                   |
-| `time_delta_right`       | Time separation between SWOT pass and available steric data after the SWOT pass time.                                    |
-| `ssha_karin`             | Co-located SWOT sea surface height anomaly.                                                                              |
-| `steric`, `steric_linear`| Steric height from moorings or gliders (nearest and linear interpolations), with quality control using `time_delta` values to exclude separations over 100 minutes on either side.                                                                  |
-| `swh`                    | Significant wave height.                                                                                                 |
-| `pass_num`               | SWOT orbit pass number.                                                                                                  |
-| `mooring_id`             | Mooring or glider identifier (`S1`, `P1`, `P2`, `S2`, `P3`, `P4`, `S3`, `P5`, `P6`, `S4`, `P7`, `ru32`, `ru38`).         |
 
 
 ### Key Functions
@@ -281,6 +272,45 @@ This script includes a series of functions for processing, selecting, and analyz
     9      : Minimum number of valid points required to remove trends. Default is 5; 
              any snapshot with fewer than 5 points will be dropped.
 ```
+
+### Input 
+
+- The csv file produced by the third step 
+  `../data/colocated_data_karin_moorings_gliders_depth_{-args.bottom_depth:3d}.csv`
+
+### Output
+
+- The output is saved to 
+  `../data/4.0.colocated_data_karin_moorings_gliders_depth_{-args.bottom_depth:3d}.valid_points.{valid_points:02d}.deltat_{deltat_threshold:03d}m.clean.csv`
+
+Example:
+
+| **time_karin** | **lon**     | **lat**    | **time_delta_left** | **time_delta_right** | **ssha_karin**      | **steric** | **steric_linear**   | **swh**  | **pass_num** | **mooring_id** |
+|----------------|-------------|------------|----------------------|-----------------------|---------------------|------------|---------------------|----------|-------------|----------------|
+| 7892017.0      | -125.122    | 36.1864    | -31.41667           | 0.8                  | 0.8614519029724665  | 53.5223    | 1.0026886874165344  | 1.24138  | 13.0        | S1             |
+| 7892017.0      | -125.0642   | 36.0231    | -96.28333           | 39.55                | 0.28985193243691365 | 53.812     | 0.335874731568603   | 1.22698  | 13.0        | P2             |
+| 7892017.0      | -125.0444   | 35.9205    | -0.76667            | 34.83333             | -0.4251734271795222 | 52.6694    | -0.830690943385294  | 1.21972  | 13.0        | S2             |
+| 7892017.0      | -125.0347   | 35.8467    | -24.3               | 41.03333             | -0.8776541701424689 | 51.6737    | -0.6379694699829103 | 1.2167   | 13.0        | P3             |
+| 7892017.0      | -124.98     | 35.6557    | -9.26667            | 27.68333             | -0.7914287090493992 | 52.2395    | -1.0163700968681446 | 1.19866  | 13.0        | S3             |
+| 7892017.0      | -124.9502   | 35.4759    | -99.48333           | 36.38333             | -0.3845929904770151 | 50.3547    | -0.10730154753787652| 1.18777  | 13.0        | P6             |
+| 7892017.0      | -124.9088   | 35.3901    | -17.9               | 15.23333             | 1.327545461439023   | 53.2169    | 1.2537686387890892  | 1.1809   | 13.0        | S4             |
+| 7977854.0      | -125.1242   | 36.1853    | -2.3                | 24.26667             | 0.3792522432655523  | 53.1642    | -0.35590908346390615| 2.85409  | 13.0        | S1             |
+
+
+| **Field**                | **Description**                                                                                                           |
+|--------------------------|---------------------------------------------------------------------------------------------------------------------------|
+| `time_karin`             | Timestamp of SWOT data.                                                                                                  |
+| `lon`, `lat`             | Longitude and latitude of the co-located data point (from moorings).                                                     |
+| `time_delta_left`        | Time separation between SWOT pass and available steric data before the SWOT pass time.                                   |
+| `time_delta_right`       | Time separation between SWOT pass and available steric data after the SWOT pass time.                                    |
+| `ssha_karin`             | Co-located SWOT sea surface height anomaly.                                                                              |
+| `steric`, `steric_linear`| Steric height from moorings or gliders (nearest and linear interpolations), with quality control using `time_delta` values to exclude separations over 100 minutes on either side.                                                                  |
+| `swh`                    | Significant wave height.                                                                                                 |
+| `pass_num`               | SWOT orbit pass number.                                                                                                  |
+| `mooring_id`             | Mooring or glider identifier (`S1`, `P1`, `P2`, `S2`, `P3`, `P4`, `S3`, `P5`, `P6`, `S4`, `P7`, `ru32`, `ru38`).         |
+
+
+### Functions
 
 1. **remove_trend(data, var_name, valid_points=5, temporal=True, spatial=True)**
    
