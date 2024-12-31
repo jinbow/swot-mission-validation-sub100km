@@ -142,6 +142,7 @@ def plot_spectrum(data,fs0=[1/110,1/10]):
     plt.tight_layout()
     print(f'save figure to ../figures/wavenumber_spectrum_{-args.bottom_depth}.pdf')
     plt.savefig(f'../figures/wavenumber_spectrum_{-args.bottom_depth}.pdf')
+    plt.savefig(f'../figures/wavenumber_spectrum_{-args.bottom_depth}.png',dpi=150)
     return 
 
 def parse_arguments():
