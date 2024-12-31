@@ -299,13 +299,13 @@ Example:
 
 | **Field**                | **Description**                                                                                                           |
 |--------------------------|---------------------------------------------------------------------------------------------------------------------------|
-| `time_karin`             | Timestamp of SWOT data.                                                                                                  |
+| `time_karin`             | Timestamp of SWOT data. Seconds since 2023-01-01                                                                         |
 | `lon`, `lat`             | Longitude and latitude of the co-located data point (from moorings).                                                     |
-| `time_delta_left`        | Time separation between SWOT pass and available steric data before the SWOT pass time.                                   |
-| `time_delta_right`       | Time separation between SWOT pass and available steric data after the SWOT pass time.                                    |
+| `time_delta_left`        | Time separation between SWOT pass and available steric data before the SWOT pass time (minutes).         |
+| `time_delta_right`       | Time separation between SWOT pass and available steric data after the SWOT pass time (minutes).                |
 | `ssha_karin`             | Co-located SWOT sea surface height anomaly.                                                                              |
 | `steric`, `steric_linear`| Steric height from moorings or gliders (nearest and linear interpolations), with quality control using `time_delta` values to exclude separations over 100 minutes on either side.                                                                  |
-| `swh`                    | Significant wave height.                                                                                                 |
+| `swh`                    | Significant wave height (m).                                                                                                 |
 | `pass_num`               | SWOT orbit pass number.                                                                                                  |
 | `mooring_id`             | Mooring or glider identifier (`S1`, `P1`, `P2`, `S2`, `P3`, `P4`, `S3`, `P5`, `P6`, `S4`, `P7`, `ru32`, `ru38`).         |
 
