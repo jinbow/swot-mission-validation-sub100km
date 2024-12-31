@@ -1,0 +1,1 @@
+/Users/jinbo.wang/Data/swot.karin/SWOT_L2_LR_SSH_2.0_combined_calval_orbit_pass_013_sub_lat-30-40.nc
