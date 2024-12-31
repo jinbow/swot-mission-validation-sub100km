@@ -199,7 +199,8 @@ python 3.0.colocate.steric.karin.py --bottom_depth=-500 --top_depth=0
 4. **Handles multiple passes**: Supports processing for specific SWOT orbit passes.
 5. **Exports results**: Saves the co-located data to a CSV file using Pandas.
 
-- **Input data**
+###Input data
+
     - Steric height 
         * Produced by the second step [2.0.calculate_steric_height.py](#calculate-steric-height).
         * `../data/rutgers/ru32_ru38_steric_heights_depth_{-args.bottom_depth:3d}.csv`
