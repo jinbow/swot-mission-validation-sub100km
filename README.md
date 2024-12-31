@@ -276,7 +276,9 @@ This script includes a series of functions for processing, selecting, and analyz
 ### Input 
 
 - The csv file produced by the third step 
-  `../data/colocated_data_karin_moorings_gliders_depth_{-args.bottom_depth:3d}.csv`
+```markdown
+../data/colocated_data_karin_moorings_gliders_depth_{-args.bottom_depth:3d}.csv
+```
 
 ### Output
 
@@ -427,6 +429,19 @@ Example:
 This script computes the final wavenumber spectrum of the mooring steric height (steric) and Karin SSHA and their difference. The wavenumber spectrum can be calculated using the Welch method and Lomb-Scargle periodogram (LS) for comparison. Resutls using LS are used in the paper. 
 
 The script takes the cleaned data from step 4.
+
+### Input
+```markdown
+  ../data/4.0.colocated_data_karin_moorings_gliders_depth_{-args.bottom_depth:3d}.valid_points.{valid_points:02d}.deltat_{deltat_threshold:03d}m.clean.csv
+```
+
+Given the parameters used in the paper: bottom_depth=-500, valid_points=9 and deltat_threshold=100. The input file is 
+```markdown
+  ../data/4.0.colocated_data_karin_moorings_gliders_depth_500.valid_points.09.deltat_100m.clean.csv
+```
+### Output
+- The final wavenumber spectrum figure. 
+
 
 ### Key Functions
 
