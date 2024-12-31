@@ -23,19 +23,52 @@ This code is designed to reproduce all the analyses and figures presented in the
 ## Directory Structure
 
 ```markdown
-   .
-   ├── data/
-   │   ├── NeurOST_SSH-SST_20230403_20240722.nc
-   │   ├── SWOT_L2_LR_SSH_2.0_combined_calval_orbit_pass_013_sub_lat-30-40.nc
-   │   ├── SWOT_L2_LR_SSH_2.0_combined_calval_orbit_pass_026_sub_lat-30-40.nc
-   │   └── mooring_positions.csv
-   |   ├── mooring.data/
-   |   ├── density_all_moorings_level-2.nc
-   ├── figures/
-   │   ├── figure1_locations.png
-   │   └── figure1_locations_zoom.png
-   ├── utils.py
-   └── main_script.py
+  .
+├── LICENSE
+├── README.md
+├── data
+│   ├── 3.0.colocated_data_karin_moorings_gliders_depth_500.csv
+│   ├── 4.0.colocated_data_karin_moorings_gliders_depth_500.valid_points.05.deltat_100m.clean.csv
+│   ├── 4.0.colocated_data_karin_moorings_gliders_depth_500.valid_points.09.deltat_100m.clean.csv
+│   ├── 4.0.log.colocated.data.stats_depth500.deltat_100m.valid_points.05.txt
+│   ├── 4.0.log.colocated.data.stats_depth500.deltat_100m.valid_points.09.txt
+│   ├── 4.0.log.colocated.data.stats_depth_500.valid_points.05.deltat_100m.txt
+│   ├── 4.0.log.colocated.data.stats_depth_500.valid_points.09.deltat_100m.txt
+│   ├── NeurOST_SSH-SST_20230403_20240722_sub_lat-30-40.nc
+│   ├── SWOT_L2_LR_SSH_2.0_combined_calval_orbit_pass_013_sub_lat-30-40.nc
+│   ├── SWOT_L2_LR_SSH_2.0_combined_calval_orbit_pass_026_sub_lat-30-40.nc
+│   ├── density_timemean.nc
+│   ├── mooring.data/
+│   └── rutgers/
+├── docs
+├── figures
+│   ├── 4.0.colocated_data_rmsd_cdf_depth_500.valid_points.05.deltat_100m.png
+│   ├── 4.0.colocated_data_rmsd_cdf_depth_500.valid_points.09.deltat_100m.png
+│   ├── 4.0.colocated_data_rmsd_depth_500.valid_points.05.deltat_100m.png
+│   ├── 4.0.colocated_data_rmsd_depth_500.valid_points.09.deltat_100m.png
+│   ├── 4.0.colocated_data_scatter_karin_vs_steric_depth_500.valid_points.05.deltat_100m.png
+│   ├── 4.0.colocated_data_scatter_karin_vs_steric_depth_500.valid_points.09.deltat_100m.png
+│   ├── 4.0.colocated_data_steric_spatial_profiles_depth_500.valid_points.05.deltat_100m.png
+│   ├── 4.0.colocated_data_steric_spatial_profiles_depth_500.valid_points.09.deltat_100m.png
+│   ├── 4.0.colocated_data_swh_rmsd_depth_500.valid_points.05.deltat_100m.png
+│   ├── 4.0.colocated_data_swh_rmsd_depth_500.valid_points.09.deltat_100m.png
+│   ├── 4.0.colocated_data_time_series_depth_500.valid_points.05.deltat_100m.png
+│   ├── 4.0.colocated_data_time_series_depth_500.valid_points.09.deltat_100m.png
+│   ├── figure1_locations.png
+│   ├── figure1_locations_zoom.png
+│   ├── wavenumber_spectrum_500.pdf
+│   └── wavenumber_spectrum_500.png
+├── src
+│   ├── 0.plot_figure1.py
+│   ├── 1.0.density_all_moorings_gliders_level-2.py
+│   ├── 2.0.calculate_steric_height.py
+│   ├── 2.1.profile.statistics.py
+│   ├── 3.0.colocate.steric.karin.py
+│   ├── 3.1.calibrate_gliders.py
+│   ├── 3.2.vis.all.swot.images.pass.13.26.py
+│   ├── 4.0.process.colocated.data.py
+│   ├── 5.0.wavenumber_spectrum.py
+│   ├── utils.py
 ```
 
 
