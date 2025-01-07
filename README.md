@@ -6,6 +6,7 @@ In Wang et al. (2025), we conducted a validation analysis of sea surface height 
 
 <div style="display: flex; justify-content: space-around; align-items: center;">
   <img src="figures/figure1_locations.png" alt="SWOT Mission Validation Campaign sites" height="250">
+  <img src="figures/4.0.colocated_data_time_series_depth_500.valid_points.04.deltat_100m.png" alt="Wavenumber spectrum validation" height="250">
   <img src="figures/wavenumber_spectrum_500.png" alt="Wavenumber spectrum validation" height="250">
 </div>
 
