@@ -76,7 +76,7 @@ def wavenumber_spectrum(da,dx,varn,extend_to=120,method='interpolate'):
         return fs, lsxx
     elif method=='lombscargle':
         ffs=1/extend_to; nyquist=1/20
-        fs=np.linspace(1/100.,nyquist,17)
+        fs=np.linspace(1/100.,nyquist,10)
         hann=signal.windows.hann(extend_to+1)
         winx=interpolate.interp1d(np.linspace(0,extend_to,extend_to+1),hann)(x)
         lsxx=signal.lombscargle(x,y*winx,2*np.pi*fs,normalize=False)

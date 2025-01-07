@@ -1,5 +1,4 @@
 # co-locate steric and karin 
-# import commonly used packages
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -9,27 +8,19 @@ from scipy.interpolate import griddata
 from scipy import signal 
 
 xrod=xr.open_dataset
-
-def mask_bad_karin(kk):
-    nt,ny,nx=kk.shape
-    kk-=np.nanmean(kk,axis=1,keepdims=True)
-    rms=np.nanstd(kk.reshape(nt,-1),axis=1)
-    print('rms',rms)
-    #kk[rms<1.5,...]=np.nan 
-    #kk[rms>5.2,...]=np.nan
-    plt.plot(rms)
-    plt.figure()
-    plt.imshow(kk[rms<1.5,...][0,...])
-    plt.show()
-    return kk
+ff=open('../data/3.0.colocate.steric.karin.log.txt',mode='w')
 
 def colocate(karin_fn,steric):
+    ff.write(f'run colocate({karin_fn},steric)')
     # clean steric, dropna for steric, and surface_time
     steric=steric.dropna(subset=['steric','surface_time'])
     
-    print("load swot data from ",karin_fn)
+    ff.write("load swot data from {karin_fn}\n")
     kk=xrod(karin_fn)
-    #limit the latitude range to cover only the caval region
+    n0=len(kk)
+    kk=kk.dropna(subset=['steric','surface_time'])
+    ff.write(f'total number of rows {n0}, total usable rows {len(kk)}\n')
+    #limit the latitude range to cover only the calval region
     mk=(np.nanmean(kk.latitude,axis=1)>34.5) & (np.nanmean(kk.latitude,axis=1)<36.5)
     dis=np.nanmean(kk.latitude,axis=1)-35.5
     ilat=np.where(np.abs(dis)==np.nanmin(np.abs(dis)))[0][0]    
@@ -38,14 +29,12 @@ def colocate(karin_fn,steric):
     
     msk=(time>=np.datetime64('2023-04-01')) & (time<np.datetime64('2023-07-12')) & (np.isnat(time)==False)
     time_karin=time[msk]
-    print("SWOT passing time", time_karin)
-    print("load the data")
+    ff.write(f"SWOT passing time {time_karin}\n")
     swh=kk.swh_model[msk,...].values[:,mk,:] #select the time and latitude range
     ssha_karin=100*(kk.ssha_karin+kk.height_cor_xover+kk.internal_tide_hret)[msk,...].values[:,mk,:] 
     
     ssha_karin_qual=kk.ssha_karin_qual[msk,...].values[:,mk,:]
     ssha_karin=np.where(ssha_karin_qual==0,ssha_karin,np.nan) #mask the bad data
-    #ssha_karin=mask_bad_karin(ssha_karin)
     
     ssha_karin=ssha_karin-np.nanmean(ssha_karin,axis=0,keepdims=True) #remove the time mean
     ssha_karin=ssha_karin-np.nanmean(ssha_karin,axis=1,keepdims=True) #remove the alongtrack mean
@@ -53,10 +42,8 @@ def colocate(karin_fn,steric):
     lat_karin=kk.latitude.values[mk,:]
     lon_karin=kk.longitude.values[mk,:]-360
     pass_num=int(karin_fn.split('pass_')[1][:3])
-    #passs_num=np.ones(len(time))*pass_num
     
     for i in tqdm(range(len(time_karin)), desc='colocating steric height from all moorings with SWOT data'):
-        # with nanoseconds
         ssha=ssha_karin[i,...].flatten()
         mk=(np.isfinite(ssha)) & (np.isfinite(lat_karin.flatten())) & (np.isfinite(lon_karin.flatten()))
         
@@ -66,7 +53,8 @@ def colocate(karin_fn,steric):
         swh1d=swh[i,...].flatten()[mk]
         
         ktime=np.datetime64(time_karin[i],'ns')
-        mooring_ids=['S1','P1','P2','S2','P3','P4','S3','P5','P6','S4','P7','ru32','ru38']
+        
+        mooring_ids=['S1','P1','P2','S2','P3','P4','S3','P5','P6','S4','P7']#,'ru32','ru38']
         for mid in mooring_ids:
     
             ss=steric[steric['Mooring_ID']==mid]
@@ -92,7 +80,7 @@ def colocate(karin_fn,steric):
             
             time_left=np.max(delta_t[delta_t<0])
             time_right=np.min(delta_t[delta_t>=0])
-            #print('time_left',time_left,'time_right',time_right)
+
             dktime=(ktime-np.datetime64('2023-01-01'))/np.timedelta64(1,'s')
             dout0=np.r_[dktime,ss_lon,ss_lat,time_left,time_right,ssha0,ss_d,ss_d_linear,swh0,pass_num]
             dout0=dout0.reshape(1,10)
@@ -132,7 +120,7 @@ if __name__=='__main__':
     print('pass 013 is done',dd13)
     dd26=colocate('../data/SWOT_L2_LR_SSH_2.0_combined_calval_orbit_pass_026_sub_lat-30-40.nc',steric)
     print('pass 026 is done',dd26)
-    # filter by temporal separation
+
     ddd=pd.concat([dd13,dd26])
     print('concatenated results from two passes',ddd)
     ddd=ddd.dropna(subset=['steric','steric_linear','ssha_karin'])

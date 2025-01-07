@@ -6,13 +6,11 @@ number of data points without gliders: 1577
 number of data points with good steric: 1440 
      statistics 
 -------------------- 
-                     S1         P1          P2  ...          S4          P7        total
-mad           0.526426   0.317337    0.417748  ...    0.378168    0.601057     0.468465
-std           0.396283   0.256453    0.388609  ...    0.290410    0.428555     0.372735
-rmsd          0.658887   0.407850    0.570533  ...    0.476737    0.738174     0.598657
-num_points  159.000000  89.000000  149.000000  ...  155.000000  145.000000  1430.000000
-
-[4 rows x 12 columns]
+                     S1         P1          P2          S2          P3         P4          S3         P5          P6          S4          P7        total
+mad           0.526426   0.317337    0.417748    0.377457    0.523135   0.492650    0.540198   0.570369    0.435357    0.378168    0.601057     0.468465
+std           0.396283   0.256453    0.388609    0.276965    0.390351   0.340384    0.430333   0.395416    0.327327    0.290410    0.428555     0.372735
+rmsd          0.658887   0.407850    0.570533    0.468147    0.652673   0.598497    0.690643   0.686706    0.544612    0.476737    0.738174     0.598657
+num_points  159.000000  89.000000  149.000000  161.000000  146.000000  72.000000  157.000000  50.000000  147.000000  155.000000  145.000000  1430.000000
 save figure to ../figures/4.0.colocated_data_rmsd_depth_500.valid_points.05.deltat_100m.png
 save figure to ../figures/4.0.colocated_data_swh_rmsd_depth_500.valid_points.05.deltat_100m.png
 save figure to ../figures/4.0.colocated_data_scatter_karin_vs_steric_depth_500.valid_points.05.deltat_100m.png

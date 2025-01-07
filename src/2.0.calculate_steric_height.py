@@ -174,6 +174,14 @@ def process_glider(glider_name,
         lat=data['profile_lat'].values
         lon=data['profile_lon'].values
         time=(data['time'].values - np.datetime64('2023-01-01T00:00:00'))/np.timedelta64(1,'s')
+        
+        try:
+            time_min=np.nanmin(time[np.abs(depth)<-integration_depth[0]])
+            time_max=np.nanmax(time[np.abs(depth)<-integration_depth[0]])
+        except:
+            time_min=np.nan
+            time_max=np.nan
+            
         nn,surface_time,steric,depth_min,depth_max=calculate_steric_height_from_profile(depth,density,time,lat=lat,
                     integration_depth=integration_depth,
                     max_spacing=max_spacing,
@@ -187,7 +195,7 @@ def process_glider(glider_name,
         
         if np.isfinite(steric):
             ivalid+=1
-        dout=np.r_[dout,np.array([lat,lon,np.nanmin(time),np.nanmax(time),surface_time,
+        dout=np.r_[dout,np.array([lat,lon,time_min,time_max,surface_time,
                                   depth_min,depth_max,
                                   nn,steric,glider_name]).reshape(1,10)]
         del data
@@ -201,7 +209,7 @@ def process_glider(glider_name,
                                           'steric',
                                           'Mooring_ID'])
     #drop rows that have NaNs in steric
-    dout=dout.dropna(subset=['steric'])
+    #dout=dout.dropna(subset=['steric'])
     print(f'finish processing {glider_name}, total lines {len(dout)} with {ivalid} valid.')
     #dout.to_csv('../data/rutgers/ru32_ru38_steric_heights.csv')
     return dout
@@ -240,13 +248,7 @@ def calculate_mooring_steric(time, data, mooring_name,
 
 
     def process_profile(time1,lat,lon,depth1,den1):
-        #mk = pids == i
-        #time1 = delta[mk]
-        time_min = np.nanmin(time1)
-        time_max = np.nanmax(time1)
-
         lat1, lon1 = np.nanmean(lat), np.nanmean(lon)
-        #depth1, den1 = depth[mk], density[mk] 
         
         num_points,surface_time,steric,depth_min,depth_max=calculate_steric_height_from_profile(depth1, den1, time1,
                     integration_depth=integration_depth,
@@ -260,6 +262,13 @@ def calculate_mooring_steric(time, data, mooring_name,
                     top_boundary_tolerance=top_boundary_tolerance,
                     surface_depth=surface_depth,
                     is_depth=True)
+        try:
+            time_min = np.nanmin(time1[np.abs(depth1)<-integration_depth[0]])
+            time_max = np.nanmax(time1[np.abs(depth1)<-integration_depth[0]])
+        except:
+            time_min = np.nan
+            time_max = np.nan
+            
         return [lat1, lon1, time_min, time_max, surface_time, depth_min, depth_max, num_points, steric]
     
     delta = (time - np.datetime64('2023-01-01T00:00:00')) / np.timedelta64(1, 's')
@@ -291,7 +300,7 @@ def calculate_mooring_steric(time, data, mooring_name,
     df['Mooring_ID'] = mooring_name[:2]
     a,tt,b=remove_spikes(df) 
     df['steric']=b
-    df=df.dropna(subset=['steric'])
+    #df=df.dropna(subset=['steric'])
     return df
 
 def parse_arguments():
@@ -335,22 +344,6 @@ def print_parameters(args):
     print(f"Bottom boundary tolerance: {args.bottom_boundary_tolerance} m")
     print(f"Top boundary tolerance: {args.top_boundary_tolerance} m")
     print(f"Surface well-mixed layer depth: {args.surface_depth} m")
-
-
-def process_glider_data(glider_id, integration_depth, max_spacing, 
-                        time_span_minimum, time_span_maximum, 
-                        rho0, surface_time_depth, bottom_boundary_tolerance, 
-                        surface_depth):
-    """
-    Process glider data to calculate steric height.
-    """
-    print(f"Processing glider {glider_id}...")
-    return process_glider(glider_id, integration_depth=integration_depth, 
-                          max_spacing=max_spacing, time_span_minimum=time_span_minimum, 
-                          time_span_maximum=time_span_maximum, rho0=rho0, 
-                          surface_time_depth=surface_time_depth, 
-                          bottom_boundary_tolerance=bottom_boundary_tolerance, 
-                          surface_depth=surface_depth)
 
 def save_to_csv(dataframe, filename):
     """
@@ -403,7 +396,7 @@ def main():
     print_parameters(args)
     
     # Flags to control whether to calculate for gliders or moorings
-    calculate_glider = False 
+    calculate_glider = True 
     calculate_mooring = True
 
     # Step 3: Process gliders if the flag is set
@@ -412,14 +405,20 @@ def main():
         glider_ids = ['ru32', 'ru38']
         glider_dataframes = []
         for glider_id in glider_ids:
-            df = process_glider_data(glider_id, integration_depth, args.max_spacing, args.time_span_minimum, 
-                                     args.time_span_maximum, args.rho0, args.surface_time_depth, 
-                                     args.bottom_boundary_tolerance, args.surface_depth)
+            df=process_glider(glider_id,
+                    integration_depth=integration_depth,
+                    max_spacing=args.max_spacing,
+                    time_span_minimum=args.time_span_minimum,
+                    time_span_maximum=args.time_span_maximum,
+                    rho0=args.rho0,
+                    surface_time_depth=args.surface_time_depth,
+                    bottom_boundary_tolerance=args.bottom_boundary_tolerance,
+                    surface_depth=args.surface_depth)
             glider_dataframes.append(df)
         
         # Concatenate all glider data and save it to CSV
         glider_df = pd.concat(glider_dataframes)
-        glider_df = glider_df.dropna(subset=['steric'])  # Drop rows where steric height is NaN
+        #glider_df = glider_df.dropna(subset=['steric'])  # Drop rows where steric height is NaN
         glider_filename = f'../data/rutgers/ru32_ru38_steric_heights_depth_{-integration_depth[0]}.csv'
         save_to_csv(glider_df, glider_filename)
 
@@ -441,9 +440,6 @@ def main():
                                           args.time_span_minimum, args.time_span_maximum, args.rho0, 
                                           args.surface_time_depth, args.bottom_boundary_tolerance, 
                                           args.surface_depth)
-
-        # Drop rows with NaN in 'steric' column
-        mooring_df = mooring_df.dropna(subset=['steric'])
         
         # Save the results to CSV
         mooring_filename = f'../data/mooring.data/all_mooring_steric_heights_depth_{-args.bottom_depth:3d}.csv'
