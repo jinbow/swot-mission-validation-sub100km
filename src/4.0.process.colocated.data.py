@@ -291,19 +291,35 @@ def error_stats(data,var_name,plotit=False,verbose=True):
         if verbose:
             ff.write(f'save figure to ../figures/4.0.colocated_data_rmsd_{append_str}.png\n')
         plt.savefig(f'../figures/4.0.colocated_data_rmsd_{append_str}.png',dpi=300)
-        
+        ### AD vs SWH
         plt.figure(figsize=(5,3))
         da=data.copy()
         ss=da[var_name]
         kk=da['ssha_karin']
         swh=da['swh']
-        dif=np.abs(ss-kk)
+        dif=np.abs(ss-kk)**2
         nn=len(swh)
-        plt.scatter(swh,dif,s=10)
+        plt.scatter(swh,dif,s=5)
+        #plot bin average
+        swh_grid=np.arange(0.5,5.6,0.5)
+        ad_grid=np.zeros(len(swh_grid))
+        ad_std_grid=np.zeros(len(swh_grid))
+        for i in range(len(swh_grid)):
+            mk=(swh>=swh_grid[i]-0.5) & (swh<swh_grid[i]+0.5)
+            if (np.sum(mk)>20):
+                ad_grid[i]=np.nanmean(dif[mk])
+                ad_std_grid[i]=np.nanstd(dif[mk])
+            else:
+                ad_grid[i]=np.nan
+                ad_std_grid[i]=np.nan
+        plt.errorbar(swh_grid,ad_grid,yerr=ad_std_grid,fmt='o',color='r')
+        
         plt.xlabel('SWH (m)')
-        plt.ylabel('Mean Absolute Difference (cm)')
-        plt.title('MAD vs SWH')
-        plt.xticks(np.arange(0,5.5,0.5))
+        plt.ylabel('MSD (cm$^2$)')
+        plt.title('MSD vs SWH')
+        plt.xlim(0,5.5)
+        plt.ylim(0,3)
+        plt.xticks(np.arange(0,5.6,0.5))
         plt.yticks(np.arange(0,3,1))
         plt.grid(True)
         plt.tight_layout()
@@ -311,8 +327,7 @@ def error_stats(data,var_name,plotit=False,verbose=True):
         plt.savefig(figfn,dpi=300)
         if verbose:
             ff.write(f'save figure to {figfn}\n')
-        
-        
+                    
         plt.figure(figsize=(6,6))
         da=data.copy()
         ss=da[var_name]
