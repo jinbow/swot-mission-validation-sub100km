@@ -74,6 +74,8 @@ This code is designed to reproduce all the analyses and figures presented in the
 
 ### Input Data Files
 
+The necessary data can be downloaded from zenodo: https://doi.org/10.5281/zenodo.14675995. 
+
 Place the following data files in the `data/` directory:
 
 - **NeurOST SSHA Data**: `NeurOST_SSH-SST_20230403_20240722.nc`
@@ -82,7 +84,6 @@ Place the following data files in the `data/` directory:
   - `SWOT_L2_LR_SSH_2.0_combined_calval_orbit_pass_026_sub_lat-30-40.nc`
 - **Mooring Positions**: `mooring_positions.csv`
 
-These data can be downloaded from the paper page on AGU website.
 
 ## Rerun all scripts
 
