@@ -1,6 +1,6 @@
 # swot-mission-validation-sub100km
 
-This repository contains the code and data necessary to reproduce the analyses and figures presented in Wang et al. (2025).
+This repository contains the code and data necessary to reproduce the analyses and figures presented in Wang et al. (2025) [preprint](https://doi.org/10.22541/essoar.173757588.88498030/v1).
 
 Wang et al. (2025), SWOT Mission Validation of Sea Surface Height Measurements at Sub-100 km Scales, submitted to GRL.
 
