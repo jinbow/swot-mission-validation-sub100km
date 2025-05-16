@@ -203,7 +203,7 @@ def plot_profiles_space(dd,var_name='steric_linear'):
         axs[i].set_ylim(-3,3)
     ax[n_row//2,0].set_ylabel('ssha (cm)')
     ax[-1,2].set_xlabel('Latitude')
-    ax[0,2].set_title('Steric height (blue) and SWOT (red) spatial profiles')
+    ax[0,2].set_title('Mooring SHA (blue) and SWOT SSHA (red) spatial profiles')
     plt.tight_layout()
     figfn=f'../figures/4.0.colocated_data_steric_spatial_profiles_{append_str}.png'
     ff.write(f'save figure to {figfn}\n')
@@ -222,19 +222,25 @@ def plot_time_series(data0,var_name):
                         gridspec_kw={'hspace': 0.1, 'wspace': 0.1})
     data=data0#remove_trend(data0,var_name,temporal=True,spatial=True)
     mids=['S1','P1','P2','S2','P3','P4','S3','P5','P6','S4','P7']
+    ccc=[]
     for i,mid in enumerate(mids):
         #print the rmsd 
         da=data[data['mooring_id']==mid].sort_values(by='time_karin')
         ss=da[var_name]
         kk=da['ssha_karin']
+        #calculate the coorelation coefficient
+        cc=np.corrcoef(ss,kk)[0,1]
+        print(f'correlation coefficients {mid} {cc}')
+        ccc.append(cc)
         time=da['time_karin']*np.timedelta64(1,'s')+np.datetime64('2023-01-01')
         ax[i].plot(time,ss,'b-+',markersize=2)
         ax[i].plot(time,kk,'r-x',markersize=2)
         ax[i].text(np.datetime64('2023-03-28'),1.6,mid,color='black',fontsize=12,fontweight='bold')
         ax[i].set_ylabel('cm')
         ax[i].set_ylim(-3.1,3.1)
+    print('correlation coefficient mean',np.array(ccc).mean(),np.array(ccc).std())
     plt.tight_layout()
-    ax[0].set_title('Steric height (blue) and SWOT (red) time series')
+    ax[0].set_title('Mooring SHA (blue) and SWOT SSHA (red) time series')
     plt.savefig(f'../figures/4.0.colocated_data_time_series_{append_str}.png',dpi=300)
     ff.write(f'save figure to ../figures/4.0.colocated_data_time_series_{append_str}.png\n')
     return 
@@ -333,7 +339,7 @@ def error_stats(data,var_name,plotit=False,verbose=True):
         ss=da[var_name]
         kk=da['ssha_karin']
         plt.scatter(ss,kk,s=5,c='r',marker='+')
-        plt.xlabel('Steric height (cm)')
+        plt.xlabel('SHA (cm)')
         plt.ylabel('SSHA_KaRIn (cm)')
         # 2d histogram 
         # hist, x_edges, y_edges = np.histogram2d(ss,kk, bins=[40,40])
